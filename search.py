@@ -99,10 +99,10 @@ def breadthFirstSearch(problem: SearchProblem):
 
     from util import Queue
 
-    search_nodes_queue = Queue()
     initial_state = problem.getStartState()
     start_node = (initial_state, [])
     visited_nodes = [initial_state]
+    search_nodes_queue = Queue()
 
     search_nodes_queue.push(start_node)
     while not search_nodes_queue.isEmpty():
@@ -138,8 +138,32 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import PriorityQueueWithFunction
 
+    def priority_function(node):
+        print(node)
+        return heuristic(node[0], problem) + problem.getCostOfActions(node[1])
+
+    initial_state = problem.getStartState()
+    start_node = (initial_state, [])
+    visited_nodes = [initial_state]
+    search_priority_queue = PriorityQueueWithFunction(priority_function)
+
+    search_priority_queue.push(start_node)
+    while not search_priority_queue.isEmpty():
+        current_node, current_path = search_priority_queue.pop()
+        visited_nodes.append(current_node)
+
+        if problem.isGoalState(current_node):
+            return current_path
+
+        successors = problem.getSuccessors(current_node)
+        for node in successors:
+            if node[0] not in visited_nodes:
+                search_priority_queue.push((node[0], current_path + [node[1]]))
+
+    # Valid path was not found
+    return []
 
 # Abbreviations
 bfs = breadthFirstSearch
