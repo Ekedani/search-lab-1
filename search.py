@@ -102,7 +102,7 @@ def breadthFirstSearch(problem: SearchProblem):
     search_nodes_queue = Queue()
     initial_state = problem.getStartState()
     start_node = (initial_state, [])
-    visited_nodes = [initial_state[0]]
+    visited_nodes = [initial_state]
 
     search_nodes_queue.push(start_node)
     while not search_nodes_queue.isEmpty():
