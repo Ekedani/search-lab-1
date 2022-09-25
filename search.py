@@ -95,7 +95,30 @@ def depthFirstSearch(problem: SearchProblem):
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Based on https://www.freecodecamp.org/news/lees-algorithm-explained-with-examples
+
+    from util import Queue
+
+    search_nodes_queue = Queue()
+    initial_state = problem.getStartState()
+    start_node = (initial_state, [])
+    visited_nodes = [initial_state[0]]
+
+    search_nodes_queue.push(start_node)
+    while not search_nodes_queue.isEmpty():
+        current_node, current_path = search_nodes_queue.pop()
+        visited_nodes.append(current_node)
+
+        if problem.isGoalState(current_node):
+            return current_path
+
+        successors = problem.getSuccessors(current_node)
+        for node in successors:
+            if node[0] not in visited_nodes:
+                search_nodes_queue.push((node[0], current_path + [node[1]]))
+
+    # Valid path was not found
+    return []
 
 
 def uniformCostSearch(problem: SearchProblem):
