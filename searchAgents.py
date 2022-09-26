@@ -459,9 +459,11 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
     food_coordinates = foodGrid.asList()
-    for food_location in food_coordinates:
-        pass
-    return 0
+    distance_evaluations = [0]
+    for food_position in food_coordinates:
+        evaluation = abs(food_position[0] - position[0]) + abs(food_position[1] - position[1])
+        distance_evaluations.append(evaluation)
+    return max(distance_evaluations)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
