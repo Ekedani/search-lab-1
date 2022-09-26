@@ -137,17 +137,17 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     from util import PriorityQueueWithFunction
 
     def priority_function(node):
-        print(node)
         return heuristic(node[0], problem) + problem.getCostOfActions(node[1])
 
     initial_state = problem.getStartState()
-    start_node = (initial_state, [])
-    visited_nodes = [initial_state]
-    search_priority_queue = PriorityQueueWithFunction(priority_function)
+    visited_nodes = []
+    search_queue = PriorityQueueWithFunction(priority_function)
 
-    search_priority_queue.push(start_node)
-    while not search_priority_queue.isEmpty():
-        current_node, current_path = search_priority_queue.pop()
+    search_queue.push((initial_state, []))
+    while not search_queue.isEmpty():
+        current_node, current_path = search_queue.pop()
+        if current_node in visited_nodes:
+            continue
         visited_nodes.append(current_node)
 
         if problem.isGoalState(current_node):
@@ -156,10 +156,11 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
         successors = problem.getSuccessors(current_node)
         for node in successors:
             if node[0] not in visited_nodes:
-                search_priority_queue.push((node[0], current_path + [node[1]]))
+                search_queue.push((node[0], current_path + [node[1]]))
 
     # Valid path was not found
     return []
+
 
 # Abbreviations
 bfs = breadthFirstSearch
