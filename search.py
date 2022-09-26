@@ -101,13 +101,12 @@ def breadthFirstSearch(problem: SearchProblem):
 
     initial_state = problem.getStartState()
     start_node = (initial_state, [])
-    visited_nodes = [initial_state]
     search_nodes_queue = Queue()
+    visited_nodes = [initial_state]
 
     search_nodes_queue.push(start_node)
     while not search_nodes_queue.isEmpty():
         current_node, current_path = search_nodes_queue.pop()
-        visited_nodes.append(current_node)
 
         if problem.isGoalState(current_node):
             return current_path
@@ -116,7 +115,7 @@ def breadthFirstSearch(problem: SearchProblem):
         for node in successors:
             if node[0] not in visited_nodes:
                 search_nodes_queue.push((node[0], current_path + [node[1]]))
-
+                visited_nodes.append(node[0])
     # Valid path was not found
     return []
 
