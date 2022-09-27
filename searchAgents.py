@@ -303,7 +303,7 @@ class CornersProblem(search.SearchProblem):
         for corner in self.corners:
             if self.startingPosition == corner:
                 visited_corners.add(self.startingPosition)
-        return self.startingPosition, visited_corners
+        return self.startingPosition, frozenset(visited_corners)
 
     def isGoalState(self, state: Any):
         """
@@ -337,10 +337,10 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
                 next_position = (nextx, nexty)
-                next_visited = state[1].copy()
+                next_visited = set(state[1])
                 if next_position in self.corners:
                     next_visited.add(next_position)
-                successors.append(((next_position, next_visited), action))
+                successors.append(((next_position, frozenset(next_visited)), action))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
