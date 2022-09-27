@@ -470,13 +470,19 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
+    # We can use mazeDistance here for good results
+    # But calling BFS every time we use heuristic is definitely not a good idea
+    # So I've decided to use manhattan distances to food
     food_coordinates = foodGrid.asList()
+
+    if not food_coordinates:
+        return 0
+
     distance_evaluations = []
     for food_position in food_coordinates:
         evaluation = abs(food_position[0] - position[0]) + abs(food_position[1] - position[1])
         distance_evaluations.append(evaluation)
-    if not distance_evaluations:
-        return 0
+
     return max(distance_evaluations)
 
 
