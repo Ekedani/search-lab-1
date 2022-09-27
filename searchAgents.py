@@ -470,17 +470,38 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
+    # We won't use mazeDistance here, because calling bfs every time we estimate a node
+    # sounds like a bad idea
     food_coordinates = foodGrid.asList()
 
+    # No food left
     if not food_coordinates:
         return 0
 
-    distance_evaluations = []
+    distances_to_food = []
     for food_position in food_coordinates:
-        evaluation = abs(util.manhattanDistance(position, food_position))
-        distance_evaluations.append(evaluation)
+        distance = abs(util.manhattanDistance(position, food_position))
+        distances_to_food.append(distance)
 
-    return max(distance_evaluations)
+    # It seems like heuristic becomes much better if we also use
+    # sum of minimal distances between food (you can imagine it as
+    # some kind of length of a line through all remaining food dots
+    min_food_dists_sum = 0
+    unvisited_food = food_coordinates.copy()
+    current_food_position = unvisited_food.pop(0)
+    while unvisited_food:
+        next_food_position = None
+        current_min_distance = 999999
+        for food_position in unvisited_food:
+            distance = util.manhattanDistance(current_food_position, food_position)
+            if distance < current_min_distance:
+                next_food_position = food_position
+                current_min_distance = distance
+        min_food_dists_sum += current_min_distance
+        current_food_position = next_food_position
+        unvisited_food.remove(current_food_position)
+
+    return min_food_dists_sum + min(distances_to_food)
 
 
 class ClosestDotSearchAgent(SearchAgent):
