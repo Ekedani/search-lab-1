@@ -166,7 +166,31 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
 
 
 def greedyAStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
-    pass
+    from util import PriorityQueueWithFunction
+
+    initial_state = problem.getStartState()
+    closed_nodes = set()
+    # We just ignore cost of actions to make it greedy
+    open_queue = PriorityQueueWithFunction(lambda node: heuristic(node[0], problem))
+
+    open_queue.push((initial_state, []))
+    while not open_queue.isEmpty():
+        current_node, current_path = open_queue.pop()
+
+        if current_node in closed_nodes:
+            continue
+
+        if problem.isGoalState(current_node):
+            return current_path
+
+        closed_nodes.add(current_node)
+        successors = problem.getSuccessors(current_node)
+        for node in successors:
+            if node[0] not in closed_nodes:
+                open_queue.push((node[0], current_path + [node[1]]))
+
+    # Valid path was not found
+    return []
 
 
 # Abbreviations
