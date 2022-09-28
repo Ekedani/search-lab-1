@@ -95,7 +95,27 @@ def depthFirstSearch(problem: SearchProblem):
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import Queue
+
+    initial_state = problem.getStartState()
+    visited_nodes = [initial_state]
+    search_queue = Queue()
+
+    search_queue.push((initial_state, []))
+    while not search_queue.isEmpty():
+        current_node, current_path = search_queue.pop()
+
+        if problem.isGoalState(current_node):
+            return current_path
+
+        successors = problem.getSuccessors(current_node)
+        for node in successors:
+            if node[0] not in visited_nodes:
+                search_queue.push((node[0], current_path + [node[1]]))
+                visited_nodes.append(node[0])
+
+    # Valid path was not found
+    return []
 
 
 def uniformCostSearch(problem: SearchProblem):
@@ -115,7 +135,62 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import PriorityQueueWithFunction
+
+    # Too unwieldy to be lambda, sadly
+    def priority_function(node):
+        return heuristic(node[0], problem) + problem.getCostOfActions(node[1])
+
+    initial_state = problem.getStartState()
+    closed_nodes = set()
+    open_queue = PriorityQueueWithFunction(priority_function)
+
+    open_queue.push((initial_state, []))
+    while not open_queue.isEmpty():
+        current_node, current_path = open_queue.pop()
+
+        if current_node in closed_nodes:
+            continue
+
+        if problem.isGoalState(current_node):
+            return current_path
+
+        closed_nodes.add(current_node)
+        successors = problem.getSuccessors(current_node)
+        for node in successors:
+            if node[0] not in closed_nodes:
+                open_queue.push((node[0], current_path + [node[1]]))
+
+    # Valid path was not found
+    return []
+
+
+def greedyAStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
+    from util import PriorityQueueWithFunction
+
+    initial_state = problem.getStartState()
+    closed_nodes = set()
+    # We just ignore cost of actions to make it greedy
+    open_queue = PriorityQueueWithFunction(lambda node: heuristic(node[0], problem))
+
+    open_queue.push((initial_state, []))
+    while not open_queue.isEmpty():
+        current_node, current_path = open_queue.pop()
+
+        if current_node in closed_nodes:
+            continue
+
+        if problem.isGoalState(current_node):
+            return current_path
+
+        closed_nodes.add(current_node)
+        successors = problem.getSuccessors(current_node)
+        for node in successors:
+            if node[0] not in closed_nodes:
+                open_queue.push((node[0], current_path + [node[1]]))
+
+    # Valid path was not found
+    return []
 
 
 # Abbreviations
@@ -123,3 +198,4 @@ bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
+greedy_astar = greedyAStarSearch
