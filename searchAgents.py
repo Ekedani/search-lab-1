@@ -491,13 +491,13 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     current_food_position = unvisited_food.pop(0)
     while unvisited_food:
         next_food_position = None
-        current_min_distance = 999999
+        current_min = 999999
         for food_position in unvisited_food:
             distance = util.manhattanDistance(current_food_position, food_position)
-            if distance < current_min_distance:
+            if distance < current_min:
                 next_food_position = food_position
-                current_min_distance = distance
-        min_food_dists_sum += current_min_distance
+                current_min = distance
+        min_food_dists_sum += current_min
         current_food_position = next_food_position
         unvisited_food.remove(current_food_position)
 
