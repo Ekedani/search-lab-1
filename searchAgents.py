@@ -483,9 +483,6 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
         distance = abs(util.manhattanDistance(position, food_position))
         distances_to_food.append(distance)
 
-    # It seems like heuristic becomes much better if we also use
-    # sum of minimal distances between food (you can imagine it as
-    # some kind of length of a line through all remaining food dots
     min_food_dists_sum = 0
     unvisited_food = food_coordinates.copy()
     current_food_position = unvisited_food.pop(0)
@@ -494,9 +491,11 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
         current_min = 999999
         for food_position in unvisited_food:
             distance = util.manhattanDistance(current_food_position, food_position)
+
             if distance < current_min:
                 next_food_position = food_position
                 current_min = distance
+
         min_food_dists_sum += current_min
         current_food_position = next_food_position
         unvisited_food.remove(current_food_position)
