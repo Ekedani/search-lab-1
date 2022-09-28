@@ -98,9 +98,10 @@ def breadthFirstSearch(problem: SearchProblem):
     from util import Queue
 
     initial_state = problem.getStartState()
-    # visited_nodes = [initial_state]
-    visited_nodes = [[False] * (problem.walls.width - 1) for i in range(problem.walls.height - 1)]
-    visited_nodes[initial_state[1]][initial_state[0]] = True
+    visited_nodes = [initial_state]
+    # Uncomment this for using matrix instead of list
+    # visited_nodes = [[False] * (problem.walls.width - 1) for i in range(problem.walls.height - 1)]
+    # visited_nodes[initial_state[1]][initial_state[0]] = True
     search_queue = Queue()
 
     search_queue.push((initial_state, []))
@@ -112,12 +113,13 @@ def breadthFirstSearch(problem: SearchProblem):
 
         successors = problem.getSuccessors(current_node)
         for node in successors:
-            #if node[0] not in visited_nodes:
-            if not visited_nodes[node[0][1]][node[0][0]]:
+            # Uncomment this for using matrix instead of list
+            # if not visited_nodes[node[0][1]][node[0][0]]:
+            if node[0] not in visited_nodes:
                 search_queue.push((node[0], current_path + [node[1]]))
-                # visited_nodes.append(node[0])
-                visited_nodes[node[0][1]][node[0][0]] = True
-
+                visited_nodes.append(node[0])
+                # Uncomment this for using matrix instead of list
+                # visited_nodes[node[0][1]][node[0][0]] = True
 
     # Valid path was not found
     return []
